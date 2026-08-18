@@ -46,7 +46,7 @@ function Newsletter() {
         message: "Thank you for subscribing! Check your inbox for updates.",
       });
       setEmail("");
-    } catch (err) {
+    } catch {
       setStatus({
         type: "error",
         message: "Something went wrong. Please try again.",
@@ -100,4 +100,4 @@ function Newsletter() {
   );
 }
 
-export default Newsletter;
+export default Newsletter;  
