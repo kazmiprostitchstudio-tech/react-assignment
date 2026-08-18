@@ -1,0 +1,330 @@
+/* ==========================================================================
+   Product Reviews Component - Responsive Styles
+   ========================================================================== */
+
+.product-reviews-section {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 2rem 0 3rem 0;
+}
+
+.product-reviews-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* --- Top Bar --- */
+.reviews-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.reviews-heading-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.reviews-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+.reviews-count-badge {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.reviews-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-filter-btn {
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.icon-filter-btn:hover {
+  background-color: #e5e5e5;
+}
+
+/* Sort Dropdown */
+.sort-dropdown-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sort-select {
+  appearance: none;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 62px;
+  padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #000000;
+  cursor: pointer;
+  outline: none;
+}
+
+.sort-dropdown-arrow {
+  position: absolute;
+  right: 1rem;
+  font-size: 0.75rem;
+  color: #000000;
+  pointer-events: none;
+}
+
+/* Write a Review Button */
+.write-review-btn {
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 62px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.write-review-btn:hover {
+  background-color: #262626;
+}
+
+/* --- Reviews Grid (2 Columns) --- */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.review-box {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.review-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.review-stars-row {
+  display: flex;
+  gap: 3px;
+  color: #ffc633;
+  font-size: 1.1rem;
+}
+
+.dots-menu-btn {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.reviewer-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.reviewer-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.verified-check {
+  color: #01ab31;
+  font-size: 1rem;
+}
+
+.reviewer-comment {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.review-date {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Load More Button --- */
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.load-more-btn {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 62px;
+  padding: 0.9rem 3rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+/* --- Write Review Modal --- */
+.review-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.review-modal-content {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h4 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.modal-form input,
+.modal-form select,
+.modal-form textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+  border-color: #000000;
+}
+
+.submit-modal-btn {
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 62px;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reviews-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reviews-actions-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .sort-select {
+    padding: 0.65rem 2rem 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .write-review-btn {
+    padding: 0.65rem 1.1rem;
+    font-size: 0.85rem;
+  }
+}

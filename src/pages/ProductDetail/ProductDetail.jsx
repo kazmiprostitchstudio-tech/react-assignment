@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaMinus, FaPlus } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
+import ProductReviews from "../../components/ProductReviews/ProductReviews";
 import "./ProductDetail.css";
 
 import img1 from "../../assets/product-detail/detail-1.png";
@@ -236,6 +237,21 @@ function ProductDetail() {
             FAQs
           </button>
         </div>
+
+        {/* Dynamic Tab Contents */}
+        {activeTab === "reviews" && <ProductReviews totalReviewsCount={451} />}
+        {activeTab === "details" && (
+          <div style={{ padding: "2.5rem 0", color: "#555", lineHeight: 1.8 }}>
+            <h3>Material & Specifications</h3>
+            <p>100% Breathable Combed Cotton. Machine wash cold, tumble dry low.</p>
+          </div>
+        )}
+        {activeTab === "faqs" && (
+          <div style={{ padding: "2.5rem 0", color: "#555", lineHeight: 1.8 }}>
+            <h3>Frequently Asked Questions</h3>
+            <p>Standard delivery takes 2-4 business days. 30-day hassle-free returns.</p>
+          </div>
+        )}
 
       </div>
     </div>
