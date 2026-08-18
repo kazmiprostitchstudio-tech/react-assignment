@@ -6,9 +6,6 @@
   width: 100%;
   padding: 0 1.5rem;
   background-color: transparent;
-  position: relative;
-  z-index: 10;
-  margin-bottom: -90px; /* Overlaps seamlessly into the upcoming Footer */
 }
 
 .newsletter-container {
