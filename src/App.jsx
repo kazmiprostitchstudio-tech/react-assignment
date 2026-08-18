@@ -7,6 +7,7 @@ import NewArrivals from "./components/NewArrivals/NewArrivals";
 import TopSelling from "./components/TopSelling/TopSelling";
 import DressStyle from "./components/DressStyle/DressStyle";
 import Testimonials from "./components/Testimonials/Testimonials";
+import Newsletter from "./components/Newsletter/Newsletter";
 import "./App.css";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <TopSelling />
         <DressStyle />
         <Testimonials />
+        <Newsletter />
       </div>
     </Router>
   );

@@ -1,0 +1,182 @@
+/* ==========================================================================
+   Newsletter Card Banner - Mobile First Responsive Styles
+   ========================================================================== */
+
+.newsletter-section {
+  width: 100%;
+  padding: 0 1.5rem;
+  background-color: transparent;
+  position: relative;
+  z-index: 10;
+  margin-bottom: -90px; /* Overlaps seamlessly into the upcoming Footer */
+}
+
+.newsletter-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.newsletter-box {
+  background-color: #000000;
+  border-radius: 20px;
+  padding: 2.75rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+/* --- Left Column: Heading --- */
+.newsletter-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: #ffffff;
+  text-transform: uppercase;
+  max-width: 550px;
+  letter-spacing: -0.02em;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* --- Right Column: Form --- */
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 360px;
+  position: relative;
+}
+
+.newsletter-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.newsletter-mail-icon {
+  position: absolute;
+  left: 1.25rem;
+  font-size: 1.15rem;
+  color: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.newsletter-input {
+  width: 100%;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 62px;
+  padding: 0.85rem 1rem 0.85rem 3.1rem;
+  font-size: 0.95rem;
+  color: #000000;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.newsletter-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.newsletter-input:focus {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.newsletter-submit-btn {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 62px;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.newsletter-submit-btn:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+.newsletter-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* --- Status Alert Feedback --- */
+.newsletter-status-alert {
+  font-size: 0.82rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.newsletter-status-alert.success {
+  background-color: rgba(39, 174, 96, 0.2);
+  color: #2ecc71;
+}
+
+.newsletter-status-alert.error {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: #ff6b6b;
+}
+
+.newsletter-status-alert.info {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: #74b9ff;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablets (under 992px) */
+@media (max-width: 992px) {
+  .newsletter-box {
+    padding: 2.25rem 2.5rem;
+    gap: 2rem;
+  }
+
+  .newsletter-title {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile Screens (under 768px) */
+@media (max-width: 768px) {
+  .newsletter-section {
+    margin-bottom: -60px;
+    padding: 0 1rem;
+  }
+
+  .newsletter-box {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 2rem 1.5rem;
+    gap: 1.75rem;
+  }
+
+  .newsletter-title {
+    font-size: 1.8rem;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .newsletter-form {
+    max-width: 100%;
+  }
+}
