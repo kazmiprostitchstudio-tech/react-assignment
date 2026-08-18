@@ -1,3 +1,4 @@
+import "./Cart.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronRight, FiTrash2, FiTag, FiArrowRight } from "react-icons/fi";
