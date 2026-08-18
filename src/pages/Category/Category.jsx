@@ -29,12 +29,12 @@ import rel2 from "../../assets/related/related-2.png";
 import rel3 from "../../assets/related/related-3.png";
 import rel4 from "../../assets/related/related-4.png";
 
-// Comprehensive Dataset for Filtering
 const CATEGORY_PRODUCTS = [
   {
     id: "gradient-graphic-tshirt",
     title: "Gradient Graphic T-shirt",
     category: "T-shirts",
+    style: "Casual",
     image: rel2,
     price: 145,
     originalPrice: null,
@@ -48,6 +48,7 @@ const CATEGORY_PRODUCTS = [
     id: "polo-tipping-details",
     title: "Polo with Tipping Details",
     category: "Shirts",
+    style: "Formal",
     image: rel3,
     price: 180,
     originalPrice: null,
@@ -61,6 +62,7 @@ const CATEGORY_PRODUCTS = [
     id: "black-striped-tshirt",
     title: "Black Striped T-shirt",
     category: "T-shirts",
+    style: "Casual",
     image: rel4,
     price: 120,
     originalPrice: 150,
@@ -74,6 +76,7 @@ const CATEGORY_PRODUCTS = [
     id: "skinny-fit-jeans",
     title: "Skinny Fit Jeans",
     category: "Jeans",
+    style: "Party",
     image: p2,
     price: 240,
     originalPrice: 260,
@@ -87,6 +90,7 @@ const CATEGORY_PRODUCTS = [
     id: "checkered-shirt",
     title: "Checkered Shirt",
     category: "Shirts",
+    style: "Formal",
     image: p3,
     price: 180,
     originalPrice: null,
@@ -100,6 +104,7 @@ const CATEGORY_PRODUCTS = [
     id: "sleeve-striped-tshirt",
     title: "Sleeve Striped T-shirt",
     category: "T-shirts",
+    style: "Gym",
     image: p4,
     price: 130,
     originalPrice: 160,
@@ -113,6 +118,7 @@ const CATEGORY_PRODUCTS = [
     id: "vertical-striped-shirt",
     title: "Vertical Striped Shirt",
     category: "Shirts",
+    style: "Casual",
     image: p5,
     price: 212,
     originalPrice: 232,
@@ -126,6 +132,7 @@ const CATEGORY_PRODUCTS = [
     id: "courage-graphic-tshirt",
     title: "Courage Graphic T-shirt",
     category: "T-shirts",
+    style: "Casual",
     image: p6,
     price: 145,
     originalPrice: null,
@@ -139,6 +146,7 @@ const CATEGORY_PRODUCTS = [
     id: "loose-fit-bermuda-shorts",
     title: "Loose Fit Bermuda Shorts",
     category: "Shorts",
+    style: "Gym",
     image: p7,
     price: 80,
     originalPrice: null,
@@ -152,6 +160,7 @@ const CATEGORY_PRODUCTS = [
     id: "polo-contrast-trims",
     title: "Polo with Contrast Trims",
     category: "Shirts",
+    style: "Formal",
     image: rel1,
     price: 212,
     originalPrice: 242,
@@ -165,6 +174,7 @@ const CATEGORY_PRODUCTS = [
     id: "tshirt-tape-details",
     title: "T-shirt with Tape Details",
     category: "T-shirts",
+    style: "Casual",
     image: p1,
     price: 120,
     originalPrice: null,
@@ -178,6 +188,7 @@ const CATEGORY_PRODUCTS = [
     id: "faded-skinny-jeans",
     title: "Faded Skinny Jeans",
     category: "Jeans",
+    style: "Party",
     image: p8,
     price: 210,
     originalPrice: null,
@@ -190,6 +201,7 @@ const CATEGORY_PRODUCTS = [
 ];
 
 const CATEGORIES_LIST = ["T-shirts", "Shorts", "Shirts", "Hoodie", "Jeans"];
+const DRESS_STYLES = ["Casual", "Formal", "Party", "Gym"];
 const COLORS_LIST = [
   { id: "green", hex: "#00C12B" },
   { id: "red", hex: "#F50606" },
@@ -221,22 +233,21 @@ function StarRating({ rating }) {
 }
 
 function Category() {
-  // Filter States
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedDressStyle, setSelectedDressStyle] = useState("All");
   const [maxPrice, setMaxPrice] = useState(250);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [sortBy, setSortBy] = useState("popular");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  // Realtime Filter & Sort Logic
   const filteredProducts = useMemo(() => {
     return CATEGORY_PRODUCTS.filter((item) => {
       if (selectedCategory !== "All" && item.category !== selectedCategory) return false;
+      if (selectedDressStyle !== "All" && item.style !== selectedDressStyle) return false;
       if (item.price > maxPrice) return false;
       if (selectedColor && item.color !== selectedColor) return false;
       if (selectedSize && !item.sizes.includes(selectedSize)) return false;
@@ -248,18 +259,17 @@ function Category() {
       if (sortBy === "rating") return b.rating - a.rating;
       return 0;
     });
-  }, [selectedCategory, maxPrice, selectedColor, selectedSize, sortBy]);
+  }, [selectedCategory, selectedDressStyle, maxPrice, selectedColor, selectedSize, sortBy]);
 
-  // Paginated Slicing
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
+  const totalPages = Math.max(10, Math.ceil(filteredProducts.length / itemsPerPage) || 1);
   const currentDisplayed = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // Reset Filters
   const handleResetFilters = () => {
     setSelectedCategory("All");
+    setSelectedDressStyle("All");
     setMaxPrice(250);
     setSelectedColor(null);
     setSelectedSize(null);
@@ -298,7 +308,7 @@ function Category() {
 
             <hr className="filter-divider" />
 
-            {/* Categories List */}
+            {/* Categories */}
             <ul className="category-filter-list">
               <li 
                 className={selectedCategory === "All" ? "active" : ""}
@@ -321,7 +331,7 @@ function Category() {
 
             <hr className="filter-divider" />
 
-            {/* Price Filter */}
+            {/* Price */}
             <div className="filter-group">
               <div className="filter-group-header">
                 <h4>Price</h4>
@@ -345,7 +355,7 @@ function Category() {
 
             <hr className="filter-divider" />
 
-            {/* Colors Filter */}
+            {/* Colors */}
             <div className="filter-group">
               <div className="filter-group-header">
                 <h4>Colors</h4>
@@ -374,7 +384,7 @@ function Category() {
 
             <hr className="filter-divider" />
 
-            {/* Size Filter */}
+            {/* Size */}
             <div className="filter-group">
               <div className="filter-group-header">
                 <h4>Size</h4>
@@ -397,7 +407,36 @@ function Category() {
               </div>
             </div>
 
-            {/* Apply & Reset Buttons */}
+            <hr className="filter-divider" />
+
+            {/* Dress Style */}
+            <div className="filter-group">
+              <div className="filter-group-header">
+                <h4>Dress Style</h4>
+                <FaChevronUp className="accordion-icon" />
+              </div>
+              <ul className="category-filter-list">
+                <li
+                  className={selectedDressStyle === "All" ? "active" : ""}
+                  onClick={() => { setSelectedDressStyle("All"); setCurrentPage(1); }}
+                >
+                  <span>All Styles</span>
+                  <FaChevronRight className="cat-arrow" />
+                </li>
+                {DRESS_STYLES.map((style) => (
+                  <li
+                    key={style}
+                    className={selectedDressStyle === style ? "active" : ""}
+                    onClick={() => { setSelectedDressStyle(style); setCurrentPage(1); }}
+                  >
+                    <span>{style}</span>
+                    <FaChevronRight className="cat-arrow" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Actions */}
             <div className="filter-actions">
               <button 
                 type="button" 
@@ -406,7 +445,7 @@ function Category() {
               >
                 Apply Filter
               </button>
-              {(selectedCategory !== "All" || selectedColor || selectedSize || maxPrice < 250) && (
+              {(selectedCategory !== "All" || selectedDressStyle !== "All" || selectedColor || selectedSize || maxPrice < 250) && (
                 <button type="button" className="reset-filter-btn" onClick={handleResetFilters}>
                   Clear All
                 </button>
@@ -414,10 +453,9 @@ function Category() {
             </div>
           </aside>
 
-          {/* Right Product Grid Area */}
+          {/* Right Product Grid */}
           <main className="category-main-content">
             
-            {/* Header / Sort Row */}
             <div className="category-top-bar">
               <div className="category-title-wrap">
                 <h1 className="category-heading">Casual</h1>
@@ -454,7 +492,6 @@ function Category() {
               </div>
             </div>
 
-            {/* Dynamic 3x3 Grid */}
             {currentDisplayed.length > 0 ? (
               <div className="category-product-grid">
                 {currentDisplayed.map((product) => (
@@ -497,40 +534,71 @@ function Category() {
             <hr className="pagination-divider" />
 
             {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="pagination-wrapper">
-                <button
-                  type="button"
-                  className="page-nav-btn prev"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            <div className="pagination-wrapper">
+              <button
+                type="button"
+                className="page-nav-btn prev"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              >
+                <FaArrowLeft /> Previous
+              </button>
+
+              <div className="pagination-numbers">
+                <button 
+                  type="button" 
+                  className={`page-num-btn ${currentPage === 1 ? "active" : ""}`}
+                  onClick={() => setCurrentPage(1)}
                 >
-                  <FaArrowLeft /> Previous
+                  1
                 </button>
-
-                <div className="pagination-numbers">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i + 1}
-                      type="button"
-                      className={`page-num-btn ${currentPage === i + 1 ? "active" : ""}`}
-                      onClick={() => setCurrentPage(i + 1)}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  className="page-nav-btn next"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                <button 
+                  type="button" 
+                  className={`page-num-btn ${currentPage === 2 ? "active" : ""}`}
+                  onClick={() => setCurrentPage(2)}
                 >
-                  Next <FaArrowRight />
+                  2
+                </button>
+                <button 
+                  type="button" 
+                  className={`page-num-btn ${currentPage === 3 ? "active" : ""}`}
+                  onClick={() => setCurrentPage(3)}
+                >
+                  3
+                </button>
+                <span className="pagination-dots">...</span>
+                <button 
+                  type="button" 
+                  className={`page-num-btn ${currentPage === 8 ? "active" : ""}`}
+                  onClick={() => setCurrentPage(8)}
+                >
+                  8
+                </button>
+                <button 
+                  type="button" 
+                  className={`page-num-btn ${currentPage === 9 ? "active" : ""}`}
+                  onClick={() => setCurrentPage(9)}
+                >
+                  9
+                </button>
+                <button 
+                  type="button" 
+                  className={`page-num-btn ${currentPage === totalPages ? "active" : ""}`}
+                  onClick={() => setCurrentPage(totalPages)}
+                >
+                  {totalPages}
                 </button>
               </div>
-            )}
+
+              <button
+                type="button"
+                className="page-nav-btn next"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              >
+                Next <FaArrowRight />
+              </button>
+            </div>
 
           </main>
 

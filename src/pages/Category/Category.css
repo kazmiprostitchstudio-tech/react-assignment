@@ -536,3 +536,13 @@
     display: none;
   }
 }
+.pagination-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1rem;
+  user-select: none;
+}
