@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaMinus, FaPlus } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 import ProductReviews from "../../components/ProductReviews/ProductReviews";
+import RelatedProducts from "../../components/RelatedProducts/RelatedProducts";
 import "./ProductDetail.css";
 
 import img1 from "../../assets/product-detail/detail-1.png";
@@ -27,16 +28,15 @@ const PRODUCT_DATA = {
   sizes: ["Small", "Medium", "Large", "X-Large"],
 };
 
-// Star Rating Component
 function StarRating({ rating }) {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= rating) {
-      stars.push(<FaStar key={i} className="star filled" />);
+      stars.push(<FaStar key={i} className="detail-star filled" />);
     } else if (i - rating === 0.5) {
-      stars.push(<FaStarHalfAlt key={i} className="star filled" />);
+      stars.push(<FaStarHalfAlt key={i} className="detail-star filled" />);
     } else {
-      stars.push(<FaRegStar key={i} className="star" />);
+      stars.push(<FaRegStar key={i} className="detail-star" />);
     }
   }
   return <div className="detail-stars">{stars}</div>;
@@ -50,13 +50,11 @@ function ProductDetail() {
   const [activeTab, setActiveTab] = useState("reviews");
   const [addedToast, setAddedToast] = useState(false);
 
-  // Quantity Handlers
   const handleQuantity = (type) => {
     if (type === "dec" && quantity > 1) setQuantity(quantity - 1);
     if (type === "inc") setQuantity(quantity + 1);
   };
 
-  // Add To Cart (LocalStorage Integration)
   const handleAddToCart = () => {
     const cartItem = {
       id: PRODUCT_DATA.id,
@@ -84,7 +82,6 @@ function ProductDetail() {
 
     localStorage.setItem("shopco_cart", JSON.stringify(existingCart));
 
-    // Show feedback toast
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 3000);
   };
@@ -104,10 +101,10 @@ function ProductDetail() {
           <span className="breadcrumb-current">T-shirts</span>
         </nav>
 
-        {/* Main Product Showcase */}
+        {/* Main Product Details Grid */}
         <div className="product-main-grid">
           
-          {/* Left Gallery: Vertical Thumbnails + Big View */}
+          {/* Gallery View */}
           <div className="product-gallery">
             <div className="thumbnail-list">
               {PRODUCT_DATA.images.map((img, idx) => (
@@ -127,7 +124,7 @@ function ProductDetail() {
             </div>
           </div>
 
-          {/* Right Column: Details & Purchase Actions */}
+          {/* Product Purchase Actions */}
           <div className="product-actions-info">
             <h1 className="detail-product-title">{PRODUCT_DATA.title}</h1>
 
@@ -146,7 +143,7 @@ function ProductDetail() {
 
             <hr className="detail-divider" />
 
-            {/* Select Colors */}
+            {/* Colors */}
             <div className="attribute-section">
               <span className="attribute-label">Select Colors</span>
               <div className="color-swatches">
@@ -167,7 +164,7 @@ function ProductDetail() {
 
             <hr className="detail-divider" />
 
-            {/* Choose Size */}
+            {/* Size */}
             <div className="attribute-section">
               <span className="attribute-label">Choose Size</span>
               <div className="size-options">
@@ -186,7 +183,7 @@ function ProductDetail() {
 
             <hr className="detail-divider" />
 
-            {/* Quantity Counter & Add To Cart Button */}
+            {/* Quantity & CTA */}
             <div className="purchase-cta-row">
               <div className="quantity-counter">
                 <button type="button" onClick={() => handleQuantity("dec")} aria-label="Decrease quantity">
@@ -213,7 +210,7 @@ function ProductDetail() {
 
         </div>
 
-        {/* Tab Navigation (Product Details / Reviews / FAQs) */}
+        {/* Tab Navigation */}
         <div className="detail-tabs-header">
           <button
             type="button"
@@ -254,6 +251,9 @@ function ProductDetail() {
         )}
 
       </div>
+
+      {/* You Might Also Like Section */}
+      <RelatedProducts />
     </div>
   );
 }
