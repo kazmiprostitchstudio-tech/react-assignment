@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import TopBanner from "./components/TopBanner/TopBanner";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
@@ -9,6 +10,7 @@ import "./App.css";
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="app-container">
         <TopBanner />
         <Navbar />
