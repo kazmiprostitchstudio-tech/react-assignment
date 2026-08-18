@@ -1,0 +1,224 @@
+/* ==========================================================================
+   Footer Component - Responsive Styles
+   ========================================================================== */
+
+.footer-wrapper {
+  width: 100%;
+  position: relative;
+  margin-top: 140px; /* Space for overlapping newsletter */
+  background-color: transparent;
+}
+
+.footer-newsletter-wrapper {
+  position: absolute;
+  top: -90px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.footer-main-content {
+  background-color: #f0f0f0;
+  padding-top: 140px;
+  padding-bottom: 2rem;
+}
+
+.footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 1.5fr 3fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* --- Brand Information Column --- */
+.footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.footer-brand-logo {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #000000;
+  text-decoration: none;
+  letter-spacing: -0.04em;
+}
+
+.footer-brand-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.6);
+  max-width: 260px;
+  margin: 0;
+}
+
+.footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.social-icon-btn {
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.social-icon-btn:hover,
+.social-icon-btn.filled-social {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+/* --- Dynamic Link Columns --- */
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.footer-links-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.footer-col-title {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #000000;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.footer-link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.footer-nav-link {
+  font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-nav-link:hover {
+  color: #000000;
+}
+
+/* --- Bottom Legal Row --- */
+.footer-bottom-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-copyright {
+  font-size: 0.88rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.footer-payment-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.payment-card-badge {
+  background-color: #ffffff;
+  border: 1px solid #d6dce5;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 30px;
+}
+
+.payment-card-badge.visa { color: #1a1f71; }
+.payment-card-badge.mastercard { color: #eb001b; }
+.payment-card-badge.paypal { color: #003087; }
+.payment-card-badge.applepay,
+.payment-card-badge.gpay {
+  color: #000000;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.payment-card-badge span {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablets (under 992px) */
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footer-brand-desc {
+    max-width: 100%;
+  }
+
+  .footer-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Mobile Screens (under 600px) */
+@media (max-width: 600px) {
+  .footer-wrapper {
+    margin-top: 180px;
+  }
+
+  .footer-main-content {
+    padding-top: 160px;
+  }
+
+  .footer-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1rem;
+  }
+
+  .footer-bottom-container {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+}
