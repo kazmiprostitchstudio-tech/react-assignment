@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Customer Testimonials Section - Carousel Styles
+   ========================================================================== */
+
+.testimonials-section {
+  width: 100%;
+  padding: 4rem 1.5rem 5rem 1.5rem;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.testimonials-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* --- Section Header & Arrows --- */
+.testimonials-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+
+.testimonials-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.testimonials-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slider-arrow-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: #000000;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.slider-arrow-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.08);
+}
+
+.slider-arrow-btn:active {
+  transform: scale(0.95);
+}
+
+/* --- Carousel Cards Track --- */
+.testimonials-carousel {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.25rem 1.5rem 0.25rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+
+.testimonials-carousel::-webkit-scrollbar {
+  display: none; /* Hide scrollbar Chrome/Safari */
+}
+
+/* --- Individual Review Card --- */
+.review-card {
+  flex: 0 0 calc(33.333% - 0.85rem); /* Exactly 3 cards visible on desktop */
+  min-width: 320px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Stars */
+.review-stars {
+  display: flex;
+  gap: 4px;
+  color: #ffc633;
+  font-size: 1.1rem;
+  margin-bottom: 0.9rem;
+}
+
+/* Author & Verification */
+.review-author-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+}
+
+.review-author-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.verified-badge-icon {
+  color: #01ab31; /* Shop.co Green Verified Badge */
+  font-size: 1.1rem;
+}
+
+/* Review Text */
+.review-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablets (under 992px) */
+@media (max-width: 992px) {
+  .testimonials-title {
+    font-size: 2.3rem;
+  }
+
+  .review-card {
+    flex: 0 0 calc(50% - 0.75rem); /* 2 cards visible */
+  }
+}
+
+/* Mobile Screens (under 640px) */
+@media (max-width: 640px) {
+  .testimonials-section {
+    padding: 2.5rem 1rem 3.5rem 1rem;
+  }
+
+  .testimonials-title {
+    font-size: 1.8rem;
+  }
+
+  .review-card {
+    flex: 0 0 88%; /* 1 card visible on mobile with hint of next */
+    min-width: unset;
+    padding: 1.4rem;
+  }
+
+  .review-author-name {
+    font-size: 1.05rem;
+  }
+
+  .review-text {
+    font-size: 0.88rem;
+  }
+}

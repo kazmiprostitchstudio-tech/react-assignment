@@ -6,6 +6,7 @@ import Brands from "./components/Brands/Brands";
 import NewArrivals from "./components/NewArrivals/NewArrivals";
 import TopSelling from "./components/TopSelling/TopSelling";
 import DressStyle from "./components/DressStyle/DressStyle";
+import Testimonials from "./components/Testimonials/Testimonials";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <NewArrivals />
         <TopSelling />
         <DressStyle />
+        <Testimonials />
       </div>
     </Router>
   );
