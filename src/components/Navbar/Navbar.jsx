@@ -1,17 +1,50 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiSearch, FiShoppingCart, FiUser, FiChevronDown, FiMenu, FiX } from "react-icons/fi";
 import "./Navbar.css";
 
-function Navbar({ cartCount = 0 }) {
+function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+  const navigate = useNavigate();
+
+  // Dynamic Cart Badge Listener from LocalStorage
+  useEffect(() => {
+    const calculateCartCount = () => {
+      try {
+        const savedCart = localStorage.getItem("shopco_cart");
+        if (savedCart) {
+          const items = JSON.parse(savedCart);
+          const totalQty = items.reduce((acc, item) => acc + (item.quantity || 1), 0);
+          setCartCount(totalQty);
+        } else {
+          setCartCount(3); // Default initial items count matching design
+        }
+      } catch {
+        setCartCount(0);
+      }
+    };
+
+    calculateCartCount();
+
+    // Listen for storage changes across tabs / components
+    window.addEventListener("storage", calculateCartCount);
+    const interval = setInterval(calculateCartCount, 1000);
+
+    return () => {
+      window.removeEventListener("storage", calculateCartCount);
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      console.log("Searching for:", searchQuery);
+      navigate(`/category/casual?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      closeMobileMenu();
     }
   };
 
@@ -48,7 +81,7 @@ function Navbar({ cartCount = 0 }) {
             onMouseLeave={() => setShopDropdownOpen(false)}
           >
             <button 
-              type="button"
+              type="button" 
               className="navbar-link-btn"
               onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
             >
@@ -57,26 +90,38 @@ function Navbar({ cartCount = 0 }) {
 
             {shopDropdownOpen && (
               <div className="dropdown-menu">
-                <Link to="/shop/men" onClick={closeMobileMenu}>Men's Clothes</Link>
-                <Link to="/shop/women" onClick={closeMobileMenu}>Women's Clothes</Link>
-                <Link to="/shop/casual" onClick={closeMobileMenu}>Casual Wear</Link>
-                <Link to="/shop/formal" onClick={closeMobileMenu}>Formal Wear</Link>
+                <Link to="/category/casual" onClick={closeMobileMenu}>Casual</Link>
+                <Link to="/category/casual" onClick={closeMobileMenu}>Men's Clothes</Link>
+                <Link to="/category/casual" onClick={closeMobileMenu}>Women's Clothes</Link>
+                <Link to="/category/casual" onClick={closeMobileMenu}>Formal Wear</Link>
               </div>
             )}
           </li>
 
           <li>
-            <NavLink to="/on-sale" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")} onClick={closeMobileMenu}>
+            <NavLink 
+              to="/category/casual" 
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")} 
+              onClick={closeMobileMenu}
+            >
               On Sale
             </NavLink>
           </li>
           <li>
-            <NavLink to="/new-arrivals" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")} onClick={closeMobileMenu}>
+            <NavLink 
+              to="/category/casual" 
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")} 
+              onClick={closeMobileMenu}
+            >
               New Arrivals
             </NavLink>
           </li>
           <li>
-            <NavLink to="/brands" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")} onClick={closeMobileMenu}>
+            <NavLink 
+              to="/category/casual" 
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")} 
+              onClick={closeMobileMenu}
+            >
               Brands
             </NavLink>
           </li>
@@ -97,12 +142,12 @@ function Navbar({ cartCount = 0 }) {
 
         {/* Right Side Action Icons */}
         <div className="navbar-actions">
-          <Link to="/cart" className="navbar-action-btn" aria-label="Shopping Cart">
+          <Link to="/cart" className="navbar-action-btn" aria-label="Shopping Cart" onClick={closeMobileMenu}>
             <FiShoppingCart />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
 
-          <Link to="/signup" className="navbar-action-btn" aria-label="User Account">
+          <Link to="/signup" className="navbar-action-btn" aria-label="User Account" onClick={closeMobileMenu}>
             <FiUser />
           </Link>
         </div>
