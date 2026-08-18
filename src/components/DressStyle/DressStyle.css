@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Browse By Dress Style - Asymmetric Grid Layout
+   ========================================================================== */
+
+.dress-style-section {
+  width: 100%;
+  padding: 2rem 1.5rem 4rem 1.5rem;
+  background-color: #ffffff;
+}
+
+.dress-style-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.dress-style-box {
+  background-color: #f0f0f0;
+  border-radius: 40px;
+  padding: 4.5rem 4rem;
+}
+
+.dress-style-heading {
+  font-size: 3rem;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+  color: #000000;
+  margin-bottom: 3.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* --- Asymmetric 2-Row Grid --- */
+.dress-style-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.dress-style-card {
+  position: relative;
+  height: 289px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dress-style-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Width Ratios */
+.style-card-short {
+  flex: 1 1 calc(38% - 0.75rem);
+  min-width: 280px;
+}
+
+.style-card-wide {
+  flex: 1 1 calc(62% - 0.75rem);
+  min-width: 320px;
+}
+
+.dress-style-title {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #000000;
+  z-index: 2;
+}
+
+.dress-style-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top;
+  transition: transform 0.35s ease;
+}
+
+.dress-style-card:hover .dress-style-image {
+  transform: scale(1.04);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablets (under 992px) */
+@media (max-width: 992px) {
+  .dress-style-box {
+    padding: 3rem 2rem;
+    border-radius: 28px;
+  }
+
+  .dress-style-heading {
+    font-size: 2.4rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .dress-style-title {
+    font-size: 1.8rem;
+    left: 1.5rem;
+  }
+}
+
+/* Mobile Screens (under 640px) */
+@media (max-width: 640px) {
+  .dress-style-section {
+    padding: 1.5rem 1rem 3rem 1rem;
+  }
+
+  .dress-style-box {
+    padding: 2.5rem 1.25rem;
+    border-radius: 20px;
+  }
+
+  .dress-style-heading {
+    font-size: 1.8rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .dress-style-grid {
+    flex-direction: column;
+  }
+
+  .style-card-short,
+  .style-card-wide {
+    flex: 1 1 100%;
+    width: 100%;
+    height: 190px;
+  }
+
+  .dress-style-title {
+    font-size: 1.5rem;
+    top: 1rem;
+    left: 1.25rem;
+  }
+}

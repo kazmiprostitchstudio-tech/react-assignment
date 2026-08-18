@@ -1,0 +1,106 @@
+/* ==========================================================================
+   Brands Banner Strip - Mobile First Responsive Styles
+   ========================================================================== */
+
+.brands-strip {
+  width: 100%;
+  background-color: #000000;
+  padding: 2.2rem 1.5rem;
+  overflow: hidden;
+}
+
+.brands-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem 1.5rem;
+}
+
+.brand-item {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.brand-item:hover {
+  opacity: 0.75;
+  transform: translateY(-1px);
+}
+
+/* --- Brand Typography Archetypes --- */
+.brand-versace {
+  font-family: "Cinzel", "Times New Roman", serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.brand-zara {
+  font-family: "Didot", "Bodoni MT", serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -0.1em;
+}
+
+.brand-gucci {
+  font-family: "Cinzel", "Times New Roman", serif;
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+}
+
+.brand-prada {
+  font-family: "Bodoni MT", "Didot", serif;
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.brand-calvin-klein {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.7rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablets & Screens under 992px */
+@media (max-width: 992px) {
+  .brands-container {
+    justify-content: center;
+    gap: 1.8rem 2.5rem;
+  }
+
+  .brand-versace { font-size: 1.4rem; }
+  .brand-zara { font-size: 1.9rem; }
+  .brand-gucci { font-size: 1.45rem; }
+  .brand-prada { font-size: 1.65rem; }
+  .brand-calvin-klein { font-size: 1.35rem; }
+}
+
+/* Mobile Screens (under 576px) */
+@media (max-width: 576px) {
+  .brands-strip {
+    padding: 1.8rem 1rem;
+  }
+
+  .brands-container {
+    gap: 1.4rem 1.8rem;
+  }
+
+  .brand-versace { font-size: 1.15rem; }
+  .brand-zara { font-size: 1.55rem; }
+  .brand-gucci { font-size: 1.2rem; }
+  .brand-prada { font-size: 1.35rem; }
+  .brand-calvin-klein { font-size: 1.1rem; }
+}
