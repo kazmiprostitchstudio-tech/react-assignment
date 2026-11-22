@@ -1,61 +1,35 @@
-import "./Cart.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiChevronRight, FiTrash2, FiTag, FiArrowRight } from "react-icons/fi";
+import axios from "axios";
+import { FiChevronRight, FiTrash2, FiTag, FiArrowRight, FiX, FiCheckCircle } from "react-icons/fi";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import "./Cart.css";
-
-import p2 from "../../assets/products/product-2.png";
-import p3 from "../../assets/products/product-3.png";
 import p4 from "../../assets/products/product-4.png";
-
-const INITIAL_CART = [
-  {
-    id: "gradient-graphic-tshirt",
-    title: "Gradient Graphic T-shirt",
-    size: "Large",
-    color: "White",
-    price: 145,
-    quantity: 1,
-    image: p4,
-  },
-  {
-    id: "checkered-shirt",
-    title: "Checkered Shirt",
-    size: "Medium",
-    color: "Red",
-    price: 180,
-    quantity: 1,
-    image: p3,
-  },
-  {
-    id: "skinny-fit-jeans",
-    title: "Skinny Fit Jeans",
-    size: "Large",
-    color: "Blue",
-    price: 240,
-    quantity: 1,
-    image: p2,
-  },
-];
 
 function Cart() {
   const [cartItems, setCartItems] = useState(() => {
     try {
       const saved = localStorage.getItem("shopco_cart");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.length > 0) return parsed;
-      }
-      return INITIAL_CART;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return INITIAL_CART;
+      return [];
     }
   });
 
   const [promoCode, setPromoCode] = useState("");
-  const [discountPercent, setDiscountPercent] = useState(20);
+  const [discountPercent, setDiscountPercent] = useState(0);
   const [promoMessage, setPromoMessage] = useState({ type: "", text: "" });
+
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [placingOrder, setPlacingOrder] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(null);
+
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerCity, setCustomerCity] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
 
   const updateStorage = (updated) => {
     setCartItems(updated);
@@ -89,15 +63,63 @@ function Cart() {
     }
   };
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
   const deliveryFee = cartItems.length > 0 ? 15 : 0;
   const grandTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
 
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
+    if (cartItems.length === 0) return;
+
+    setPlacingOrder(true);
+    try {
+      const payload = {
+        customerDetails: {
+          name: customerName.trim(),
+          email: customerEmail.trim(),
+          phone: customerPhone.trim(),
+          city: customerCity.trim(),
+          address: customerAddress.trim(),
+        },
+        orderItems: cartItems.map((item) => ({
+          product: item.id,
+          title: item.title,
+          price: Number(item.price),
+          quantity: item.quantity,
+          size: item.size || "Large",
+          color: item.color || "Default",
+          image: item.image || "",
+        })),
+        totalAmount: grandTotal,
+        paymentMethod,
+      };
+
+      const res = await axios.post(
+        "https://backend-e-commerce-admin-hk.vercel.app/api/orders",
+        payload
+      );
+
+      if (res.data && res.data.success) {
+        setOrderSuccess(res.data.order);
+        updateStorage([]);
+        setIsCheckoutOpen(false);
+        setCustomerName("");
+        setCustomerEmail("");
+        setCustomerPhone("");
+        setCustomerCity("");
+        setCustomerAddress("");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to place order. Please try again.");
+    } finally {
+      setPlacingOrder(false);
+    }
+  };
+
   return (
     <div className="cart-page">
       <div className="cart-container">
-        
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link to="/">Home</Link>
           <FiChevronRight className="breadcrumb-arrow" />
@@ -106,9 +128,32 @@ function Cart() {
 
         <h1 className="cart-heading">YOUR CART</h1>
 
+        {orderSuccess && (
+          <div
+            style={{
+              background: "#ecfdf5",
+              border: "1px solid #10b981",
+              borderRadius: "16px",
+              padding: "24px",
+              marginBottom: "24px",
+              textAlign: "center",
+            }}
+          >
+            <FiCheckCircle size={40} color="#059669" />
+            <h2 style={{ margin: "10px 0 6px", color: "#065f46" }}>
+              Order Placed Successfully!
+            </h2>
+            <p style={{ color: "#047857", marginBottom: "12px" }}>
+              Order ID: <strong>{orderSuccess._id}</strong> — Confirmation email has been sent to your inbox!
+            </p>
+            <Link to="/" className="continue-shopping-btn">
+              Continue Shopping
+            </Link>
+          </div>
+        )}
+
         {cartItems.length > 0 ? (
           <div className="cart-layout-grid">
-            
             <div className="cart-items-box">
               {cartItems.map((item, index) => (
                 <div key={`${item.id}-${index}`}>
@@ -175,10 +220,12 @@ function Cart() {
                   <span className="summary-val-dark">${subtotal}</span>
                 </div>
 
-                <div className="summary-row">
-                  <span className="summary-label">Discount (-{discountPercent}%)</span>
-                  <span className="summary-val-red">-${discountAmount}</span>
-                </div>
+                {discountPercent > 0 && (
+                  <div className="summary-row">
+                    <span className="summary-label">Discount (-{discountPercent}%)</span>
+                    <span className="summary-val-red">-${discountAmount}</span>
+                  </div>
+                )}
 
                 <div className="summary-row">
                   <span className="summary-label">Delivery Fee</span>
@@ -198,7 +245,7 @@ function Cart() {
                   <FiTag className="promo-tag-icon" />
                   <input
                     type="text"
-                    placeholder="Add promo code"
+                    placeholder="Add promo code (SHOP20)"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     className="promo-input"
@@ -218,24 +265,150 @@ function Cart() {
               <button
                 type="button"
                 className="checkout-btn"
-                onClick={() => alert("Proceeding to payment...")}
+                onClick={() => setIsCheckoutOpen(true)}
               >
                 <span>Go to Checkout</span>
                 <FiArrowRight className="checkout-arrow" />
               </button>
             </aside>
-
           </div>
         ) : (
-          <div className="empty-cart-state">
-            <h2>Your cart is empty!</h2>
-            <p>Looks like you haven't added anything to your cart yet.</p>
-            <Link to="/category/casual" className="continue-shopping-btn">
-              Explore Products
-            </Link>
-          </div>
+          !orderSuccess && (
+            <div className="empty-cart-state">
+              <h2>Your cart is empty!</h2>
+              <p>Looks like you haven't added anything to your cart yet.</p>
+              <Link to="/" className="continue-shopping-btn">
+                Explore Products
+              </Link>
+            </div>
+          )
         )}
 
+        {isCheckoutOpen && (
+          <div
+            onClick={() => setIsCheckoutOpen(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(0,0,0,0.55)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+              padding: "16px",
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                borderRadius: "20px",
+                padding: "28px",
+                width: "100%",
+                maxWidth: "480px",
+                maxHeight: "90vh",
+                overflowY: "auto",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "18px",
+                }}
+              >
+                <h2 style={{ margin: 0, fontSize: "22px" }}>Complete Your Order</h2>
+                <button
+                  type="button"
+                  onClick={() => setIsCheckoutOpen(false)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    fontSize: "22px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <FiX />
+                </button>
+              </div>
+
+              <form onSubmit={handlePlaceOrder} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <input
+                  type="text"
+                  placeholder="Full Name *"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                  style={{ padding: "12px", borderRadius: "10px", border: "1px solid #ddd" }}
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address (for confirmation mail) *"
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  required
+                  style={{ padding: "12px", borderRadius: "10px", border: "1px solid #ddd" }}
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone Number *"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  required
+                  style={{ padding: "12px", borderRadius: "10px", border: "1px solid #ddd" }}
+                />
+                <input
+                  type="text"
+                  placeholder="City *"
+                  value={customerCity}
+                  onChange={(e) => setCustomerCity(e.target.value)}
+                  required
+                  style={{ padding: "12px", borderRadius: "10px", border: "1px solid #ddd" }}
+                />
+                <textarea
+                  placeholder="Complete Delivery Address *"
+                  rows="3"
+                  value={customerAddress}
+                  onChange={(e) => setCustomerAddress(e.target.value)}
+                  required
+                  style={{ padding: "12px", borderRadius: "10px", border: "1px solid #ddd" }}
+                />
+                <select
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  style={{ padding: "12px", borderRadius: "10px", border: "1px solid #ddd" }}
+                >
+                  <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+
+                <div
+                  style={{
+                    background: "#f8f8f8",
+                    padding: "12px",
+                    borderRadius: "10px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontWeight: "700",
+                  }}
+                >
+                  <span>Payable Total:</span>
+                  <span>${grandTotal}</span>
+                </div>
+
+                <button
+                  type="submit"
+                  className="checkout-btn"
+                  disabled={placingOrder}
+                  style={{ marginTop: "6px" }}
+                >
+                  <span>{placingOrder ? "Placing Order..." : "Confirm & Place Order"}</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
