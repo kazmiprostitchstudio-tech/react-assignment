@@ -1,34 +1,22 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaMinus, FaPlus } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 import ProductReviews from "../../components/ProductReviews/ProductReviews";
 import RelatedProducts from "../../components/RelatedProducts/RelatedProducts";
 import "./ProductDetail.css";
+import fallbackImg from "../../assets/product-detail/detail-1.png";
 
-import img1 from "../../assets/product-detail/detail-1.png";
-import img2 from "../../assets/product-detail/detail-2.png";
-import img3 from "../../assets/product-detail/detail-3.png";
+const DEFAULT_COLORS = [
+  { id: "olive", hex: "#4F4631", name: "Olive Green" },
+  { id: "forest", hex: "#314F4A", name: "Forest Green" },
+  { id: "navy", hex: "#2C3049", name: "Dark Navy" },
+];
 
-const PRODUCT_DATA = {
-  id: "one-life-graphic-tshirt",
-  title: "ONE LIFE GRAPHIC T-SHIRT",
-  rating: 4.5,
-  price: 260,
-  originalPrice: 300,
-  discount: "-40%",
-  description:
-    "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
-  images: [img1, img2, img3],
-  colors: [
-    { id: "olive", hex: "#4F4631", name: "Olive Green" },
-    { id: "forest", hex: "#314F4A", name: "Forest Green" },
-    { id: "navy", hex: "#2C3049", name: "Dark Navy" },
-  ],
-  sizes: ["Small", "Medium", "Large", "X-Large"],
-};
+const DEFAULT_SIZES = ["Small", "Medium", "Large", "X-Large"];
 
-function StarRating({ rating }) {
+function StarRating({ rating = 4.5 }) {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= rating) {
@@ -43,12 +31,36 @@ function StarRating({ rating }) {
 }
 
 function ProductDetail() {
-  const [selectedImage, setSelectedImage] = useState(PRODUCT_DATA.images[0]);
-  const [selectedColor, setSelectedColor] = useState(PRODUCT_DATA.colors[0].id);
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedColor, setSelectedColor] = useState(DEFAULT_COLORS[0].id);
   const [selectedSize, setSelectedSize] = useState("Large");
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("reviews");
   const [addedToast, setAddedToast] = useState(false);
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get("https://backend-e-commerce-admin-hk.vercel.app/api/products");
+        const list = Array.isArray(res.data) ? res.data : res.data.products || [];
+        const found = list.find((item) => (item._id || item.id) === id) || list[0] || null;
+        setProduct(found);
+        if (found) {
+          const mainImg = found.imageUrl || found.image || fallbackImg;
+          setSelectedImage(mainImg);
+        }
+      } catch (err) {
+        console.error("Error fetching product detail:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductDetail();
+  }, [id]);
 
   const handleQuantity = (type) => {
     if (type === "dec" && quantity > 1) setQuantity(quantity - 1);
@@ -56,11 +68,14 @@ function ProductDetail() {
   };
 
   const handleAddToCart = () => {
+    if (!product) return;
+
+    const productId = product._id || product.id;
     const cartItem = {
-      id: PRODUCT_DATA.id,
-      title: PRODUCT_DATA.title,
-      price: PRODUCT_DATA.price,
-      image: selectedImage,
+      id: productId,
+      title: product.title,
+      price: Number(product.price),
+      image: selectedImage || fallbackImg,
       color: selectedColor,
       size: selectedSize,
       quantity: quantity,
@@ -86,68 +101,114 @@ function ProductDetail() {
     setTimeout(() => setAddedToast(false), 3000);
   };
 
+  if (loading) {
+    return (
+      <div className="product-detail-page">
+        <div className="product-detail-container" style={{ textAlign: "center", padding: "80px 0" }}>
+          <h2>Loading Product Details...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="product-detail-page">
+        <div className="product-detail-container" style={{ textAlign: "center", padding: "80px 0" }}>
+          <h2>Product Not Found</h2>
+          <Link to="/" style={{ textDecoration: "underline", color: "#000" }}>
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const productImages =
+    Array.isArray(product.images) && product.images.length > 0
+      ? product.images
+      : [product.imageUrl || product.image || fallbackImg];
+
+  const productColors =
+    Array.isArray(product.colors) && product.colors.length > 0 ? product.colors : DEFAULT_COLORS;
+
+  const productSizes =
+    Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes : DEFAULT_SIZES;
+
+  const productRating = product.rating || 4.5;
+
   return (
     <div className="product-detail-page">
       <div className="product-detail-container">
-        
-        {/* Breadcrumbs */}
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link to="/">Home</Link>
           <FiChevronRight className="breadcrumb-arrow" />
           <Link to="/shop">Shop</Link>
           <FiChevronRight className="breadcrumb-arrow" />
-          <Link to="/category/men">Men</Link>
-          <FiChevronRight className="breadcrumb-arrow" />
-          <span className="breadcrumb-current">T-shirts</span>
+          <span className="breadcrumb-current">{product.category || "Products"}</span>
         </nav>
 
-        {/* Main Product Details Grid */}
         <div className="product-main-grid">
-          
-          {/* Gallery View */}
           <div className="product-gallery">
             <div className="thumbnail-list">
-              {PRODUCT_DATA.images.map((img, idx) => (
+              {productImages.map((img, idx) => (
                 <button
                   key={idx}
                   type="button"
                   className={`thumbnail-btn ${selectedImage === img ? "active" : ""}`}
                   onClick={() => setSelectedImage(img)}
                 >
-                  <img src={img} alt={`View ${idx + 1}`} />
+                  <img
+                    src={img}
+                    alt={`View ${idx + 1}`}
+                    onError={(e) => {
+                      e.target.src = fallbackImg;
+                    }}
+                  />
                 </button>
               ))}
             </div>
 
             <div className="main-image-display">
-              <img src={selectedImage} alt={PRODUCT_DATA.title} />
+              <img
+                src={selectedImage || fallbackImg}
+                alt={product.title}
+                onError={(e) => {
+                  e.target.src = fallbackImg;
+                }}
+              />
             </div>
           </div>
 
-          {/* Product Purchase Actions */}
           <div className="product-actions-info">
-            <h1 className="detail-product-title">{PRODUCT_DATA.title}</h1>
+            <h1 className="detail-product-title">{product.title}</h1>
 
             <div className="detail-rating-row">
-              <StarRating rating={PRODUCT_DATA.rating} />
-              <span className="detail-rating-score">{PRODUCT_DATA.rating}/5</span>
+              <StarRating rating={productRating} />
+              <span className="detail-rating-score">{productRating}/5</span>
             </div>
 
             <div className="detail-price-row">
-              <span className="detail-current-price">${PRODUCT_DATA.price}</span>
-              <span className="detail-original-price">${PRODUCT_DATA.originalPrice}</span>
-              <span className="detail-discount-badge">{PRODUCT_DATA.discount}</span>
+              <span className="detail-current-price">${product.price}</span>
+              {product.originalPrice && (
+                <span className="detail-original-price">${product.originalPrice}</span>
+              )}
+              {product.discount && (
+                <span className="detail-discount-badge">{product.discount}</span>
+              )}
             </div>
 
-            <p className="detail-description">{PRODUCT_DATA.description}</p>
+            <p className="detail-description">
+              {product.description ||
+                "Crafted from premium quality breathable fabric, offering superior comfort and modern everyday style."}
+            </p>
 
             <hr className="detail-divider" />
 
-            {/* Colors */}
             <div className="attribute-section">
               <span className="attribute-label">Select Colors</span>
               <div className="color-swatches">
-                {PRODUCT_DATA.colors.map((color) => (
+                {productColors.map((color) => (
                   <button
                     key={color.id}
                     type="button"
@@ -164,11 +225,10 @@ function ProductDetail() {
 
             <hr className="detail-divider" />
 
-            {/* Size */}
             <div className="attribute-section">
               <span className="attribute-label">Choose Size</span>
               <div className="size-options">
-                {PRODUCT_DATA.sizes.map((size) => (
+                {productSizes.map((size) => (
                   <button
                     key={size}
                     type="button"
@@ -183,7 +243,6 @@ function ProductDetail() {
 
             <hr className="detail-divider" />
 
-            {/* Quantity & CTA */}
             <div className="purchase-cta-row">
               <div className="quantity-counter">
                 <button type="button" onClick={() => handleQuantity("dec")} aria-label="Decrease quantity">
@@ -205,12 +264,9 @@ function ProductDetail() {
                 Item added to your shopping cart!
               </div>
             )}
-
           </div>
-
         </div>
 
-        {/* Tab Navigation */}
         <div className="detail-tabs-header">
           <button
             type="button"
@@ -235,12 +291,11 @@ function ProductDetail() {
           </button>
         </div>
 
-        {/* Dynamic Tab Contents */}
         {activeTab === "reviews" && <ProductReviews totalReviewsCount={451} />}
         {activeTab === "details" && (
           <div style={{ padding: "2.5rem 0", color: "#555", lineHeight: 1.8 }}>
             <h3>Material & Specifications</h3>
-            <p>100% Breathable Combed Cotton. Machine wash cold, tumble dry low.</p>
+            <p>{product.description || "100% Breathable Combed Cotton. Machine wash cold, tumble dry low."}</p>
           </div>
         )}
         {activeTab === "faqs" && (
@@ -249,10 +304,8 @@ function ProductDetail() {
             <p>Standard delivery takes 2-4 business days. 30-day hassle-free returns.</p>
           </div>
         )}
-
       </div>
 
-      {/* You Might Also Like Section */}
       <RelatedProducts />
     </div>
   );
