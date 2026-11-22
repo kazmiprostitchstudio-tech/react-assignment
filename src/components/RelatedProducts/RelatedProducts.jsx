@@ -1,52 +1,11 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import "./RelatedProducts.css";
+import fallbackImg from "../../assets/related/related-1.png";
 
-import rel1 from "../../assets/related/related-1.png";
-import rel2 from "../../assets/related/related-2.png";
-import rel3 from "../../assets/related/related-3.png";
-import rel4 from "../../assets/related/related-4.png";
-
-const RELATED_DATA = [
-  {
-    id: "polo-contrast-trims",
-    title: "Polo with Contrast Trims",
-    image: rel1,
-    rating: 4.0,
-    price: 212,
-    originalPrice: 242,
-    discount: "-20%",
-  },
-  {
-    id: "gradient-graphic-tshirt",
-    title: "Gradient Graphic T-shirt",
-    image: rel2,
-    rating: 3.5,
-    price: 145,
-    originalPrice: null,
-    discount: null,
-  },
-  {
-    id: "polo-tipping-details",
-    title: "Polo with Tipping Details",
-    image: rel3,
-    rating: 4.5,
-    price: 180,
-    originalPrice: null,
-    discount: null,
-  },
-  {
-    id: "black-striped-tshirt",
-    title: "Black Striped T-shirt",
-    image: rel4,
-    rating: 5.0,
-    price: 120,
-    originalPrice: 150,
-    discount: "-30%",
-  },
-];
-
-function StarRating({ rating }) {
+function StarRating({ rating = 4.5 }) {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= rating) {
@@ -61,43 +20,78 @@ function StarRating({ rating }) {
 }
 
 function RelatedProducts() {
+  const { id } = useParams();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRelatedProducts = async () => {
+      try {
+        const res = await axios.get("https://backend-e-commerce-admin-hk.vercel.app/api/products");
+        const data = Array.isArray(res.data) ? res.data : res.data.products || [];
+        const filtered = data.filter((item) => (item._id || item.id) !== id);
+        setProducts((filtered.length > 0 ? filtered : data).slice(0, 4));
+      } catch (err) {
+        console.error("Error fetching related products:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRelatedProducts();
+  }, [id]);
+
+  if (loading || products.length === 0) {
+    return null;
+  }
+
   return (
     <section className="related-products-section" aria-label="Related Products">
       <div className="related-products-container">
-        
         <h2 className="related-title">YOU MIGHT ALSO LIKE</h2>
 
         <div className="related-grid">
-          {RELATED_DATA.map((product) => (
-            <div key={product.id} className="related-card">
-              <Link to={`/product/${product.id}`} className="related-image-box">
-                <img src={product.image} alt={product.title} loading="lazy" />
-              </Link>
+          {products.map((product) => {
+            const productId = product._id || product.id;
+            const productImage = product.imageUrl || product.image || fallbackImg;
+            const productRating = product.rating || 4.5;
 
-              <div className="related-info">
-                <Link to={`/product/${product.id}`} className="related-card-title">
-                  {product.title}
+            return (
+              <div key={productId} className="related-card">
+                <Link to={`/product/${productId}`} className="related-image-box">
+                  <img
+                    src={productImage}
+                    alt={product.title}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = fallbackImg;
+                    }}
+                  />
                 </Link>
 
-                <div className="related-rating-row">
-                  <StarRating rating={product.rating} />
-                  <span className="related-rating-score">{product.rating}/5</span>
-                </div>
+                <div className="related-info">
+                  <Link to={`/product/${productId}`} className="related-card-title">
+                    {product.title}
+                  </Link>
 
-                <div className="related-price-row">
-                  <span className="related-price">${product.price}</span>
-                  {product.originalPrice && (
-                    <span className="related-original-price">${product.originalPrice}</span>
-                  )}
-                  {product.discount && (
-                    <span className="related-discount-badge">{product.discount}</span>
-                  )}
+                  <div className="related-rating-row">
+                    <StarRating rating={productRating} />
+                    <span className="related-rating-score">{productRating}/5</span>
+                  </div>
+
+                  <div className="related-price-row">
+                    <span className="related-price">${product.price}</span>
+                    {product.originalPrice && (
+                      <span className="related-original-price">${product.originalPrice}</span>
+                    )}
+                    {product.discount && (
+                      <span className="related-discount-badge">{product.discount}</span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-
       </div>
     </section>
   );
