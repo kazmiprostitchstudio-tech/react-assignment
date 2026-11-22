@@ -10,7 +10,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get("https://backend-e-commerce-admin-hk.vercel.app/api/products");
         setProducts(response.data);
         setLoading(false);
       } catch (err) {
